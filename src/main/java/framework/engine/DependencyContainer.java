@@ -23,11 +23,11 @@ public class DependencyContainer {
     }
 
     public void mapQualifiers(){
-        Set<Class> classes = this.getClassesInPackage("test");//nadjemo sve klase
+        Set<Class> classes = this.getClassesInPackage("test");
 
         for (Class cl : classes) {
             if(cl.getAnnotation(Qualifier.class)!=null) {
-                Qualifier qualifier = (Qualifier) cl.getAnnotation(Qualifier.class);//ako imaju qualifier
+                Qualifier qualifier = (Qualifier) cl.getAnnotation(Qualifier.class);
 
                 if(this.specToImplMap.containsKey(qualifier.value())){
                     try {
@@ -46,7 +46,7 @@ public class DependencyContainer {
         return new HashSet<>(reflections.getSubTypesOf(Object.class));
     }
 
-    public Class returnImplementation(String qualifier){//vraca instancu za interface na osnovu qualifiera
+    public Class returnImplementation(String qualifier){
         if(this.specToImplMap.containsKey(qualifier))
             return specToImplMap.get(qualifier);
         else try {

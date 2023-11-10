@@ -53,9 +53,9 @@ public class ServerThread implements Runnable{
                 return;
             }
 
-            for(HttpRoute httpRoute : this.discoveryMechanism.getMapOfControllerRoutes()){//prodje kroz mapu ruta koje postoje i pronadje onu koju smo pogodili
+            for(HttpRoute httpRoute : this.discoveryMechanism.getMapOfControllerRoutes()){
                 if(httpRoute.getRoute().equals(request.getLocation()) && httpRoute.getHttpMethod().equals(request.getMethod().toString())) {
-                    String controllerClassName = httpRoute.getController().getName();//iz rute dobije ime kontrolera i inicijalizuje sve u njemu
+                    String controllerClassName = httpRoute.getController().getName();
                     diEngine.initDependencies(controllerClassName);
                     break;
                 }
@@ -105,7 +105,7 @@ public class ServerThread implements Runnable{
             in.read(buff, 0, contentLength);
             String parametersString = new String(buff);
 
-            if (buff.length > 0) jsonParser(parametersString, parameters);//promenio parametre u json
+            if (buff.length > 0) jsonParser(parametersString, parameters);
             else parameters = new HashMap<>();
         }
 
@@ -122,7 +122,5 @@ public class ServerThread implements Runnable{
             String []paramsCut = (str[i].replaceAll("\"","")).split(":");
             parameters.put( paramsCut[0],  paramsCut[1]);
         }
-//        for (Map.Entry<String,String> entry : parameters.entrySet())
-//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
     }
 }

@@ -31,39 +31,34 @@ public class DIEngine {
             instance = new DIEngine();
             instance.singletonsMap = new HashMap<>();
             instance.dependencyContainer = new DependencyContainer();
-            instance.dependencyContainer.mapQualifiers();//cim instanciramo DIengine mapiramo sve qualifiere u e
+            instance.dependencyContainer.mapQualifiers();
         }
         return instance;
     }
 
 
     public Object returnClassInstance(Class cl) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        if(singletonsMap.containsKey(cl.getName())) {//ako ima singletona u mapi vrati
+        if(singletonsMap.containsKey(cl.getName())) {
             return singletonsMap.get(cl.getName());
         }
         else {
-            Constructor constructor = cl.getDeclaredConstructor();//ako nema napravi novi, stavi u mapu i vrati
+            Constructor constructor = cl.getDeclaredConstructor();
             Object obj = constructor.newInstance();
             singletonsMap.put(obj.getClass().getName(), obj);
             return obj;
         }
     }
-
-    //poziva se iz serverThread
+    
     public void initDependencies(String controllerName) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        Class cl = Class.forName(controllerName);//nadjemo kontroler
+        Class cl = Class.forName(controllerName);
         Object controllerObj = instance.returnClassInstance(cl);
-        instance.singletonsMap.put(controllerObj.getClass().getName(), controllerObj);//instanciramo kontroler
+        instance.singletonsMap.put(controllerObj.getClass().getName(), controllerObj);
         Field[] controllerFields = cl.getDeclaredFields();
-        controllerInitialisation(controllerObj, controllerFields);//inicijalizujemo sve servise
+        controllerInitialisation(controllerObj, controllerFields);
     }
 
     public void controllerInitialisation(Object parentObj, Field[] fields) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
         System.out.println(ANSI_PURPLE + "--Recursion--" + ANSI_RESET);
-
-//        System.out.println("-------------mapa--------------");
-//        for (HashMap.Entry<String,Object> entry : singletonsMap.entrySet())
-//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 
         for(Field field : fields){
             System.out.println(ANSI_YELLOW + "Field: " + ANSI_RESET + ANSI_BLUE + field + ANSI_RESET);
@@ -73,11 +68,11 @@ public class DIEngine {
                 Class cl = null;
                 Constructor constructor;
 
-                if(field.getType().isInterface()){//ako je interface gledamo da li ima qualifier, i ako nema error
+                if(field.getType().isInterface()){
                     Qualifier qualifier = field.getAnnotation(Qualifier.class);
 
                     if(qualifier != null){
-                        cl = instance.dependencyContainer.returnImplementation(qualifier.value());//posto mora biti singleton vracamo instancu id dep containera
+                        cl = instance.dependencyContainer.returnImplementation(qualifier.value());
                     }
                     else try {
                         throw new MissingQualifierException("Qualifier annotation missing from interface");
@@ -87,13 +82,13 @@ public class DIEngine {
                     }
                 }
                 else {
-                    String[] str = field.toString().split(" ");//ako nije interface uzmemo ime polja
+                    String[] str = field.toString().split(" ");
                     cl = Class.forName(str[1]);
                 }
                 constructor = Objects.requireNonNull(cl).getDeclaredConstructor();
 
                 if(cl.isAnnotationPresent(Bean.class)){
-                    Bean bean = (Bean) cl.getAnnotation(Bean.class); //proverimo da li je bean, service ili component i u zavisnosti pravimo singleton ili ne
+                    Bean bean = (Bean) cl.getAnnotation(Bean.class);
                     if(bean.scope().equals("singleton"))
                         obj = instance.returnClassInstance(cl);
                     else if(bean.scope().equals("prototype"))
@@ -115,13 +110,13 @@ public class DIEngine {
                 field.setAccessible(true);
                 field.set(parentObj, obj);
 
-                Autowired autowired = field.getAnnotation(Autowired.class);//ako je verbose ispisi dodatne informacije
+                Autowired autowired = field.getAnnotation(Autowired.class);
                 if(autowired.verbose()){
                     System.out.println("[Initialized " + field.getType() + " " + field.getName() + " in " + parentObj.getClass().getName() +
                             " on " + LocalDateTime.now() + " with hash code " + Objects.requireNonNull(obj).hashCode() + "]" + ANSI_RED + " verbose " + ANSI_RESET );
                 }
 
-                controllerInitialisation(obj, cl.getDeclaredFields());//udji rekurzivno u svaki objekat
+                controllerInitialisation(obj, cl.getDeclaredFields());
             }
         }
     }

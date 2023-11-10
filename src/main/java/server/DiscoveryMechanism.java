@@ -30,7 +30,7 @@ public class DiscoveryMechanism {
         return instance;
     }
 
-    public Set<Class> findAllClasses(String packageName) {//pronalazi sve klase u paketu
+    public Set<Class> findAllClasses(String packageName) {
         Reflections reflections = new Reflections(packageName, new SubTypesScanner(false));
         return new HashSet<>(reflections.getSubTypesOf(Object.class));
     }
@@ -39,13 +39,13 @@ public class DiscoveryMechanism {
         Set<Class> classes = instance.findAllClasses("test");
 
         for (Class cl : classes) {
-            if (cl.isAnnotationPresent(Controller.class)) {//nadjemo kontrolere
+            if (cl.isAnnotationPresent(Controller.class)) {
                 Method[] classMethods = cl.getMethods();
 
-                for(int i = 0; i < classMethods.length; i++){//prodjemo kroz sve metode
+                for(int i = 0; i < classMethods.length; i++){
                     String httpMethod = "";
 
-                    if(classMethods[i].isAnnotationPresent(Path.class)){//ako je http metoda napravimo novu rutu
+                    if(classMethods[i].isAnnotationPresent(Path.class)){
                         Path p = classMethods[i].getAnnotation(Path.class);
 
                         if(classMethods[i].isAnnotationPresent(GET.class)) httpMethod = "GET";
