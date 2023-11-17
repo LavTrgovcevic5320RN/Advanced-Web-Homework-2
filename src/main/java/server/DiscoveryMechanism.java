@@ -46,6 +46,8 @@ public class DiscoveryMechanism {
                     String httpMethod = "";
 
                     if(classMethods[i].isAnnotationPresent(Path.class)){
+//                        System.out.println("Metode: " + classMethods[i].getName());
+
                         Path p = classMethods[i].getAnnotation(Path.class);
 
                         if(classMethods[i].isAnnotationPresent(GET.class)) httpMethod = "GET";

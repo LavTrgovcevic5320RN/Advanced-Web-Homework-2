@@ -2,11 +2,10 @@ package test;
 
 import framework.annotations.Autowired;
 import framework.annotations.Qualifier;
-import framework.annotations.Service;
 
-@Service
+@framework.annotations.Service
 @Qualifier("ServiceB")
-public class ServiceB implements ServiceInter {
+public class ServiceB implements Service {
 
     @Autowired(verbose = true)
     private ComponentB componentB;

@@ -13,7 +13,7 @@ public class ControllerA {
 
     @Autowired(verbose = true)
     @Qualifier("ServiceC")
-    private ServiceInter serviceC;
+    private Service serviceC;
 
     @Path(path = "/methodA1")
     @GET

@@ -1,7 +1,6 @@
 package server;
 
 import framework.engine.DIEngine;
-import framework.engine.routes.ControllerRoute;
 import framework.http.response.JsonResponse;
 import framework.http.response.Response;
 import framework.http.request.enums.Method;
@@ -56,6 +55,7 @@ public class ServerThread implements Runnable{
             for(HttpRoute httpRoute : this.discoveryMechanism.getMapOfControllerRoutes()){
                 if(httpRoute.getRoute().equals(request.getLocation()) && httpRoute.getHttpMethod().equals(request.getMethod().toString())) {
                     String controllerClassName = httpRoute.getController().getName();
+//                    System.out.println("Controller name: " + controllerClassName);
                     diEngine.initDependencies(controllerClassName);
                     break;
                 }

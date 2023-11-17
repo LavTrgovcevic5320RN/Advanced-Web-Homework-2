@@ -2,9 +2,6 @@ package server;
 
 @SuppressWarnings("rawtypes")
 public class HttpRoute {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-
     private String route;
     private String httpMethod;
     private Class controller;
@@ -35,6 +32,6 @@ public class HttpRoute {
 
     @Override
     public String toString() {
-        return  ANSI_YELLOW + "Route: "+ ANSI_RESET + "path = '" + route + '\'' +", httpMethod = '" + httpMethod + '\'' + ", controller = " + controller + ", methodName = '" + methodName + '\'' ;
+        return  "Route: " + "path = '" + route + '\'' +", httpMethod = '" + httpMethod + '\'' + ", controller = " + controller + ", methodName = '" + methodName + '\'' ;
     }
 }

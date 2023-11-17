@@ -1,16 +1,15 @@
 package test;
 
 import framework.annotations.Autowired;
-import framework.annotations.Component;
 import framework.annotations.Qualifier;
 
-@Component
+@framework.annotations.Component
 @Qualifier("ComponentC")
-public class ComponentC implements ComponentInter {
+public class ComponentC implements Component {
 
     @Autowired(verbose = true)
     @Qualifier("ServiceC")
-    private ServiceInter serviceC;
+    private Service serviceC;
 
     public ComponentC() {
     }

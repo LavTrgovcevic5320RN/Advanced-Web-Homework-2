@@ -12,13 +12,6 @@ import java.util.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class DIEngine {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RED = "\u001B[31m";
-
-
     private static DIEngine instance;
     DependencyContainer dependencyContainer;
     HashMap<String, Object> singletonsMap;
@@ -58,10 +51,10 @@ public class DIEngine {
     }
 
     public void controllerInitialisation(Object parentObj, Field[] fields) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
-        System.out.println(ANSI_PURPLE + "--Recursion--" + ANSI_RESET);
+        System.out.println("--Recursion--");
 
         for(Field field : fields){
-            System.out.println(ANSI_YELLOW + "Field: " + ANSI_RESET + ANSI_BLUE + field + ANSI_RESET);
+            System.out.println("Field: " + field);
 
             if(field.isAnnotationPresent(Autowired.class)){
                 Object obj = null;
@@ -113,7 +106,7 @@ public class DIEngine {
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 if(autowired.verbose()){
                     System.out.println("[Initialized " + field.getType() + " " + field.getName() + " in " + parentObj.getClass().getName() +
-                            " on " + LocalDateTime.now() + " with hash code " + Objects.requireNonNull(obj).hashCode() + "]" + ANSI_RED + " verbose " + ANSI_RESET );
+                            " on " + LocalDateTime.now() + " with hash code " + Objects.requireNonNull(obj).hashCode() + "]" + " verbose " );
                 }
 
                 controllerInitialisation(obj, cl.getDeclaredFields());

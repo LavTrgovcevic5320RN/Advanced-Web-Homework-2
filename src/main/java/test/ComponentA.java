@@ -6,7 +6,7 @@ import framework.annotations.Qualifier;
 
 @Bean(scope = "prototype")
 @Qualifier("ComponentA")
-public class ComponentA implements ComponentInter {
+public class ComponentA implements Component {
 
     @Autowired(verbose = true)
     private ComponentC componentC;
